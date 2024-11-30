@@ -16,7 +16,7 @@
 
 # Definir o diretório do repositório.
 # Substitua o caminho abaixo pelo caminho do seu repositório Git.
-REPO_DIR="/caminho/para/seu/repositorio"
+REPO_DIR="/home/pedro/Games/rocket-league/drive_c/Program Files/Epic Games/rocketleague/TAGame/CookedPCConsole/mods/synchronized/Maps/"
 
 # Verificar se a variável REPO_DIR está definida
 if [ -z "$REPO_DIR" ]; then
