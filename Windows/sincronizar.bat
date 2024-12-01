@@ -1,6 +1,6 @@
 @echo off
 :: ============================================
-::          SCRIPT DE GERENCIAMENTO GIT
+::          SCRIPT DE GERENCIAMENTO GIT COM LFS
 :: ============================================
 :: Este script fornece um menu interativo para realizar
 :: operacoes Git no repositorio especificado.
@@ -26,12 +26,67 @@ if "%REPO_DIR%"=="" (
     exit /b
 )
 
+:: Verificar se Git esta instalado
+git --version >nul 2>&1
+if errorlevel 1 (
+    echo [ERRO] Git nao esta instalado ou nao esta no PATH.
+    pause
+    exit /b
+)
+
+:: Verificar se Git LFS esta instalado
+git lfs version >nul 2>&1
+if errorlevel 1 (
+    echo [ERRO] Git LFS nao esta instalado ou nao esta no PATH.
+    echo Por favor, instale o Git LFS a partir de https://git-lfs.github.com/
+    pause
+    exit /b
+)
+
 :: Navegar para o diretorio do repositorio
 pushd "%REPO_DIR%" >nul 2>&1
 if errorlevel 1 (
     echo [ERRO] Falha ao acessar o diretorio: %REPO_DIR%
     pause
     exit /b
+)
+
+:: Inicializar Git LFS no repositorio
+echo [INFO] Inicializando Git LFS...
+git lfs install
+if errorlevel 1 (
+    echo [ERRO] Falha ao inicializar Git LFS.
+    pause
+    popd >nul
+    exit /b
+)
+
+:: Configurar rastreamento de arquivos grandes com Git LFS
+:: Adicione aqui os tipos de arquivos que deseja rastrear com LFS
+echo [INFO] Configurando Git LFS para rastrear arquivos grandes...
+git lfs track "*.psd" "*.png" "*.jpg" "*.mp4" "*.zip" "*.upk"
+if errorlevel 1 (
+    echo [ERRO] Falha ao configurar Git LFS para rastrear arquivos.
+    pause
+    popd >nul
+    exit /b
+)
+
+:: Adicionar o arquivo .gitattributes gerado pelo Git LFS
+git add .gitattributes
+if errorlevel 1 (
+    echo [ERRO] Falha ao adicionar .gitattributes.
+    pause
+    popd >nul
+    exit /b
+)
+
+:: Comitar as configuracoes do Git LFS
+git commit -m "Configurar Git LFS para arquivos grandes" >nul 2>&1
+if errorlevel 1 (
+    echo [INFO] Nenhuma mudanca para comitar nas configuracoes do Git LFS.
+) else (
+    echo [INFO] Configurações do Git LFS comitadas.
 )
 
 :: ==============================
