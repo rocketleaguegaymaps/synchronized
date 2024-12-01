@@ -8,7 +8,6 @@
 # 1. Upload: git add ., git commit -m "maps", git push
 # 2. Download: git pull
 # 3. Sair
-# Antes de qualquer operação, verifica a autenticação SSH.
 # ============================================
 
 # ==============================
@@ -16,38 +15,18 @@
 # ==============================
 
 # Definir o diretório do repositório.
-REPO_DIR="/home/pedro/Games/rocket-league/drive_c/Program Files/Epic Games/rocketleague/TAGame/CookedPCConsole/mods/synchronized/Maps/"
+# Substitua o caminho abaixo pelo caminho do seu repositório Git.
+REPO_DIR="/home/pedro/Games/rocket-league/drive_c/Program Files/Epic Games/rocketleague/TAGame/CookedPCConsole/mods/synchronized/"
 
 # Verificar se a variável REPO_DIR está definida
 if [ -z "$REPO_DIR" ]; then
     echo "[ERRO] A variável REPO_DIR não está definida."
-    echo "Por favor, edite o script para incluir o caminho do repositório."
+    echo "Por favor, defina a variável REPO_DIR ou edite o script para incluir o caminho do repositório."
     read -p "Pressione Enter para sair..."
     exit 1
 fi
 
-# ==============================
-#    VERIFICAÇÃO DE AUTENTICAÇÃO SSH
-# ==============================
-
-echo "Verificando a autenticação SSH com o GitHub..."
-ssh_output=$(ssh -T git@github.com 2>&1)
-ssh_exit_status=$?
-
-if [ $ssh_exit_status -ne 1 ]; then
-    echo "[ERRO] Falha na autenticação SSH com o GitHub."
-    echo "Por favor, verifique se sua chave SSH está configurada corretamente."
-    echo "Consulte: https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
-    read -p "Pressione Enter para sair..."
-    exit 1
-else
-    echo "[SUCESSO] Autenticação SSH com o GitHub foi bem-sucedida."
-fi
-
-# ==============================
-#    NAVEGAR PARA O REPOSITÓRIO
-# ==============================
-
+# Navegar para o diretório do repositório
 if ! cd "$REPO_DIR"; then
     echo "[ERRO] Falha ao acessar o diretório: $REPO_DIR"
     read -p "Pressione Enter para sair..."
@@ -64,9 +43,9 @@ while true; do
     echo "           MENU DE MAPAS"
     echo "==================================="
     echo
-    echo "1. UPLOAD    - Adicionar, Comitar e Enviar mudanças"
-    echo "2. DOWNLOAD  - Baixar as últimas mudanças"
-    echo "3. SAIR      - Encerrar o script"
+    echo "1. UPLOAD   - Adicionar, Comitar e Enviar mudanças"
+    echo "2. DOWNLOAD - Baixar as últimas mudanças"
+    echo "3. SAIR     - Encerrar o script"
     echo
     read -p "Escolha uma opção (1, 2, 3): " choice
 
@@ -81,15 +60,6 @@ while true; do
             echo "==================================="
             echo
 
-            # Sincronizar branch local com remoto
-            echo "[INFO] Sincronizando com o branch remoto..."
-            git pull origin main --rebase
-            if [ $? -ne 0 ]; then
-                echo "[ERRO] Falha ao sincronizar com o branch remoto."
-                read -p "Pressione Enter para retornar ao menu..."
-                continue
-            fi
-
             # Adicionar todas as mudanças
             echo "[INFO] Executando: git add ."
             git add .
@@ -103,7 +73,7 @@ while true; do
             echo "[INFO] Executando: git commit -m \"maps\""
             git commit -m "maps"
             if [ $? -ne 0 ]; then
-                echo "[ERRO] Falha ao executar git commit. Verifique se há mudanças para comitar."
+                echo "[ERRO] Falha ao executar git commit."
                 read -p "Pressione Enter para retornar ao menu..."
                 continue
             fi
