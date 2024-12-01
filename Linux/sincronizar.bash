@@ -8,6 +8,7 @@
 # 1. Upload: git add ., git commit -m "maps", git push
 # 2. Download: git pull
 # 3. Sair
+# Antes de qualquer operação, verifica a autenticação SSH.
 # ============================================
 
 # ==============================
@@ -21,12 +22,51 @@ REPO_DIR="/home/pedro/Games/rocket-league/drive_c/Program Files/Epic Games/rocke
 # Verificar se a variável REPO_DIR está definida
 if [ -z "$REPO_DIR" ]; then
     echo "[ERRO] A variável REPO_DIR não está definida."
-    echo "Por favor, defina a variável REPO_DIR ou edite o script para incluir o caminho do repositório."
+    echo "Por favor, edite o script para incluir o caminho do repositório."
     read -p "Pressione Enter para sair..."
     exit 1
 fi
 
-# Navegar para o diretório do repositório
+# ==============================
+#    VERIFICAÇÃO DE AUTENTICAÇÃO SSH
+# ==============================
+
+echo "Verificando a autenticação SSH com o GitHub..."
+ssh_output=$(ssh -T git@github.com 2>&1)
+ssh_exit_status=$?
+
+if [ $ssh_exit_status -eq 1 ]; then
+    echo "[SUCESSO] Autenticação SSH com o GitHub foi bem-sucedida."
+elif [[ "$ssh_output" == *"Are you sure you want to continue connecting (yes/no)"* ]]; then
+    echo "Primeira vez conectando ao GitHub via SSH. Adicionando ao known_hosts."
+    ssh -T git@github.com
+    ssh_exit_status=$?
+    if [ $ssh_exit_status -eq 1 ]; then
+        echo "[SUCESSO] Autenticação SSH com o GitHub foi bem-sucedida."
+    else
+        echo "[ERRO] Autenticação SSH com o GitHub falhou."
+        echo "Por favor, verifique se sua chave SSH está configurada corretamente."
+        echo "Consulte: https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
+        read -p "Pressione Enter para sair..."
+        exit 1
+    fi
+elif [ $ssh_exit_status -eq 255 ]; then
+    echo "[ERRO] Falha na autenticação SSH com o GitHub."
+    echo "Por favor, verifique se sua chave SSH está configurada corretamente."
+    echo "Consulte: https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
+    read -p "Pressione Enter para sair..."
+    exit 1
+else
+    echo "[ERRO] Autenticação SSH com o GitHub falhou com a seguinte mensagem:"
+    echo "$ssh_output"
+    read -p "Pressione Enter para sair..."
+    exit 1
+fi
+
+# ==============================
+#    NAVEGAR PARA O REPOSITÓRIO
+# ==============================
+
 if ! cd "$REPO_DIR"; then
     echo "[ERRO] Falha ao acessar o diretório: $REPO_DIR"
     read -p "Pressione Enter para sair..."
@@ -43,9 +83,9 @@ while true; do
     echo "           MENU DE MAPAS"
     echo "==================================="
     echo
-    echo "1. UPLOAD   - Adicionar, Comitar e Enviar mudanças"
-    echo "2. DOWNLOAD - Baixar as últimas mudanças"
-    echo "3. SAIR     - Encerrar o script"
+    echo "1. UPLOAD    - Adicionar, Comitar e Enviar mudanças"
+    echo "2. DOWNLOAD  - Baixar as últimas mudanças"
+    echo "3. SAIR      - Encerrar o script"
     echo
     read -p "Escolha uma opção (1, 2, 3): " choice
 
