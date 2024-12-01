@@ -1,21 +1,10 @@
 @echo off
-:: ============================================
-::          SCRIPT DE GERENCIAMENTO GIT COM LFS
-:: ============================================
-:: Este script fornece um menu interativo para realizar
-:: operacoes Git no repositorio especificado.
-:: As opcoes disponiveis sao:
-:: 1. Upload: git add ., git commit -m "maps", git push
-:: 2. Download: git pull
-:: 3. Sair
-:: ============================================
 
 :: ==============================
 ::      CONFIGURACAO DO REPO
 :: ==============================
 
 :: Definir o diretorio do repositorio.
-:: Substitua o caminho abaixo pelo caminho do seu repositorio Git.
 set "REPO_DIR=C:\Program Files\Epic Games\rocketleague\TAGame\CookedPCConsole\mods\synchronized"
 
 :: Verificar se a variavel REPO_DIR esta definida
@@ -62,7 +51,6 @@ if errorlevel 1 (
 )
 
 :: Configurar rastreamento de arquivos grandes com Git LFS
-:: Adicione aqui os tipos de arquivos que deseja rastrear com LFS
 echo [INFO] Configurando Git LFS para rastrear arquivos grandes...
 git lfs track "*.psd" "*.png" "*.jpg" "*.mp4" "*.zip" "*.upk"
 if errorlevel 1 (
@@ -101,14 +89,16 @@ echo ===================================
 echo.
 echo 1. UPLOAD  - Adicionar, Comitar e Enviar mudancas
 echo 2. DOWNLOAD - Baixar as ultimas mudancas
-echo 3. SAIR    - Encerrar o script
+echo 3. OPEN FOLDER - Abrir local dos arquivos
+echo 4. SAIR - Encerrar o script
 echo.
-set /p choice=Escolha uma opcao (1, 2, 3): 
+set /p choice=Escolha uma opcao (1, 2, 3, 4): 
 
 :: Processar a escolha do usuario
 if "%choice%"=="1" goto OPTION1
 if "%choice%"=="2" goto OPTION2
-if "%choice%"=="3" goto END
+if "%choice%"=="3" goto OPTION3
+if "%choice%"=="4" goto END
 echo.
 echo [AVISO] Opcao invalida. Por favor, tente novamente.
 pause
@@ -181,6 +171,19 @@ if errorlevel 1 (
 echo.
 echo [SUCESSO] Download concluido com sucesso!
 pause
+goto MENU
+
+:: ==============================
+::            OPTION3
+:: ==============================
+:OPTION3
+cls
+echo ===================================
+echo           ABRINDO PASTA
+echo ===================================
+echo.
+
+start explorer %REPO_DIR%
 goto MENU
 
 :: ==============================
