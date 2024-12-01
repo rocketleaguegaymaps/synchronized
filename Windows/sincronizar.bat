@@ -133,9 +133,12 @@ if errorlevel 1 (
     goto MENU
 )
 
-:: Comitar as mudancas com a mensagem "maps"
-echo [INFO] Executando: git commit -m "maps"
-git commit -m "maps"
+:: Solicitar mensagem de commit ao usuario
+set /p commit_msg=Digite a mensagem do commit: 
+
+:: Comitar as mudancas com a mensagem fornecida
+echo [INFO] Executando: git commit -m "%commit_msg%"
+git commit -m "%commit_msg%"
 if errorlevel 1 (
     echo [ERRO] Falha ao executar git commit.
     pause
