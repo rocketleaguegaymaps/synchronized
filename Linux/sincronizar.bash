@@ -2,14 +2,6 @@
 # ============================================
 #        SCRIPT DE GERENCIAMENTO GIT
 # ============================================
-# Este script fornece um menu interativo para realizar
-# operações Git no repositório especificado.
-# As opções disponíveis são:
-# 1. Upload: git add ., git commit -m "maps", git push
-# 2. Download: git pull
-# 3. Sair
-# ============================================
-
 # ==============================
 #      CONFIGURAÇÃO DO REPO
 # ==============================
