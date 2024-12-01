@@ -54,13 +54,17 @@ echo -e "\033[1;32m[SUCCESS]\033[0m Git LFS setup completed successfully!"
 
 # Display menu to user
 while true; do
-  echo -e "\033[1;34m===================================\033[0m"
-  echo -e "\033[1;34m     GIT REPOSITORY MANAGEMENT     \033[0m"
-  echo -e "\033[1;34m===================================\033[0m"
-  echo "1. Upload: git add ., git commit -m \"message\", git push"
-  echo "2. Download: git pull"
-  echo "3. Exit"
-  read -p "Choose an option (1, 2, 3): " choice
+  clear
+    echo "==================================="
+    echo "           MENU DE MAPAS"
+    echo "==================================="
+    echo
+    echo "1. UPLOAD   - Adicionar, Comitar e Enviar mudanças"
+    echo "2. DOWNLOAD - Baixar as últimas mudanças"
+    echo "3. OPEN FOLDER - Abrir local do arquivo"
+    echo "4. SAIR - Encerrar o script"
+    echo
+    read -p "Escolha uma opção (1, 2, 3, 4): " choice
 
   case $choice in
     1)
@@ -84,7 +88,19 @@ while true; do
 
       echo -e "\033[1;32m[SUCCESS]\033[0m Download completed successfully!"
       ;;
-    3)
+      3)
+            # ==============================
+            #            OPEN FOLDER
+            # ==============================
+            clear
+            echo "==================================="
+            echo "           ABRINDO PASTA"
+            echo "==================================="
+            echo
+            nohup dolphin "$REPO_DIR" > /dev/null 2>&1 &
+            exit 0
+            ;;
+    4)
       echo -e "\033[1;34m[INFO]\033[0m Exiting script. Goodbye! :)"
       exit 0
       ;;
